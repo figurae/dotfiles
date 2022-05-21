@@ -1,3 +1,4 @@
+set autochdir		    " automatically switch to current file dir
 set showmatch		    " highlight matching braces
 set mouse=a		    " enable mouse support everywhere
 set hlsearch		    " highlight all matches
@@ -247,8 +248,8 @@ EOF
 " reload configuration
 nnoremap <silent> <Leader>r :source $MYVIMRC<cr>
 
-" TODO: automate this; lunix: h16, wenblows: h20
-set guifont=FantasqueSansMono\ Nerd\ Font:h16
+" TODO: automate this; lunix: h14, wenblows: h20
+set guifont=FantasqueSansMono\ Nerd\ Font:h14
 
 " increase/decrease font size
 nnoremap <silent> <c-_> :ZoomIn<cr>
@@ -267,6 +268,7 @@ endfunction
 map <F11> :call Neovide_fullscreen()<cr>
 
 let g:neovide_refresh_rate=60
+" let g:neovide_refresh_rate=120
 let g:neovide_transparency=0.95
 let g:neovide_cursor_vfx_mode = "pixiedust"
 let g:neovide_cursor_vfx_particle_density=32.0
@@ -339,3 +341,5 @@ end, { bang = true })
 EOF
 
 nnoremap <silent> <Leader>t :CargoRun<CR>
+
+set whichwrap+=<,>,h,l,[,]
