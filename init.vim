@@ -24,6 +24,7 @@ set ttyfast		    " does this even do anything anymore?
 " TODO: maybe per file type?
 " set spell		    " enable spell checking
 set termguicolors	    " moar colours *^__^*
+set nohlsearch		    " don't highlight searches
 
 " pluginz go brr
 
@@ -75,6 +76,7 @@ Plug 'drzel/vim-gui-zoom'
 Plug 'mhinz/vim-startify'
 Plug 'tpope/vim-endwise'
 Plug 'rstacruz/vim-closer'
+Plug 'p00f/nvim-ts-rainbow'
 call plug#end()
 
 " colorscheme dracula		    " DRAKULAAA @vv@
@@ -97,6 +99,23 @@ colorscheme gruvbox-baby
 
 " completion options
 set completeopt=menuone,noinsert,noselect
+
+lua << EOF
+require("nvim-treesitter.configs").setup {
+  highlight = {
+      -- ...
+  },
+  -- ...
+  rainbow = {
+    enable = true,
+    -- disable = { "jsx", "cpp" }, list of languages you want to disable the plugin for
+    extended_mode = true, -- Also highlight non-bracket delimiters like html tags, boolean or table: lang -> boolean
+    max_file_lines = nil, -- Do not enable for files with more than n lines, int
+    -- colors = {}, -- table of hex strings
+    -- termcolors = {} -- table of colour name strings
+  }
+}
+EOF
 
 " avoid extra messages with completion
 set shortmess+=c
@@ -155,13 +174,13 @@ cmp.setup({
         ['<C-p>'] = cmp.mapping.select_prev_item(),
 	['<C-n>'] = cmp.mapping.select_next_item(),
         -- Add tab support
-	['<S-Tab>'] = cmp.mapping.select_prev_item(),
-        ['<Tab>'] = cmp.mapping.select_next_item(),
+	-- ['<S-Tab>'] = cmp.mapping.select_prev_item(),
+        -- ['<Tab>'] = cmp.mapping.select_next_item(),
 	['<C-d>'] = cmp.mapping.scroll_docs(-4),
         ['<C-f>'] = cmp.mapping.scroll_docs(4),
 	['<C-Space>'] = cmp.mapping.complete(),
         ['<C-e>'] = cmp.mapping.close(),
-        ['<CR>'] = cmp.mapping.confirm({
+        ['<Tab>'] = cmp.mapping.confirm({
 	    behavior = cmp.ConfirmBehavior.Insert,
 	    select = true,
 	})
@@ -345,6 +364,8 @@ EOF
 nnoremap <silent> <Leader>t :CargoRun<CR>
 nnoremap <silent> <Leader>f :RustFmt<CR>
 nnoremap <silent> <Leader>s :Startify<CR>
+nnoremap <silent> <Leader>O O<ESC>O
+nnoremap <silent> <Leader>o o<ESC>o
 
 set whichwrap+=<,>,h,l,[,]
 
