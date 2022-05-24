@@ -33,6 +33,7 @@ set termguicolors	    " moar colours *^__^*
 " endif
 
 call plug#begin('~/.config/nvim/plugged')
+Plug 'rust-lang/rust.vim'
 Plug 'dracula/vim'
 Plug 'arcticicestudio/nord-vim'
 Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
@@ -51,6 +52,7 @@ Plug 'hrsh7th/cmp-path'
 Plug 'hrsh7th/cmp-buffer'
 " snippets engine
 Plug 'hrsh7th/vim-vsnip' 
+Plug 'hrsh7th/vim-vsnip-integ'
 Plug 'simrat39/rust-tools.nvim'		" more rust-analyzer features
 " Plug 'Chiel92/vim-autoformat'		" autoformatter
 Plug 'nvim-lua/popup.nvim'		" popup API
@@ -71,6 +73,8 @@ Plug 'beauwilliams/statusline.lua'
 Plug 'kosayoda/nvim-lightbulb/'
 Plug 'drzel/vim-gui-zoom'
 Plug 'mhinz/vim-startify'
+Plug 'tpope/vim-endwise'
+Plug 'rstacruz/vim-closer'
 call plug#end()
 
 " colorscheme dracula		    " DRAKULAAA @vv@
@@ -78,8 +82,6 @@ call plug#end()
 " colorscheme tokyonight
 colorscheme gruvbox-baby
 " let g:transparent_enabled = v:true" always enable TransparentEnable ;p
-
-lua require("neo-easy-brackets"):map_insert():map_visual()
 
 " dis does not work. y is dis here?
 " lua require'nvim_lsp'.rust_analyzer.setup{}
@@ -202,7 +204,7 @@ nnoremap <silent> g] <cmd>lua vim.diagnostic.goto_next()<CR>
 set signcolumn=yes
 
 " format on write
-autocmd BufWritePre *.rs lua vim.lsp.buf.formatting_sync(nil, 200)
+" autocmd BufWritePre *.rs lua vim.lsp.buf.formatting_sync(nil, 200)
 
 lua << EOF
 local autosave = require("autosave")
@@ -341,5 +343,12 @@ end, { bang = true })
 EOF
 
 nnoremap <silent> <Leader>t :CargoRun<CR>
+nnoremap <silent> <Leader>f :RustFmt<CR>
+nnoremap <silent> <Leader>s :Startify<CR>
 
 set whichwrap+=<,>,h,l,[,]
+
+imap <expr> <Tab>   vsnip#jumpable(1)   ? '<Plug>(vsnip-jump-next)'      : '<Tab>'
+smap <expr> <Tab>   vsnip#jumpable(1)   ? '<Plug>(vsnip-jump-next)'      : '<Tab>'
+imap <expr> <S-Tab> vsnip#jumpable(-1)  ? '<Plug>(vsnip-jump-prev)'      : '<S-Tab>'
+smap <expr> <S-Tab> vsnip#jumpable(-1)  ? '<Plug>(vsnip-jump-prev)'      : '<S-Tab>'
