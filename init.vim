@@ -77,6 +77,9 @@ Plug 'mhinz/vim-startify'
 Plug 'tpope/vim-endwise'
 Plug 'rstacruz/vim-closer'
 Plug 'p00f/nvim-ts-rainbow'
+" Plug 'tpope/vim-surround'
+Plug 'machakann/vim-sandwich'
+Plug 'tpope/vim-repeat'
 call plug#end()
 
 " colorscheme dracula		    " DRAKULAAA @vv@
