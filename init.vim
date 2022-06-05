@@ -105,8 +105,15 @@ set completeopt=menuone,noinsert,noselect
 
 lua << EOF
 require("nvim-treesitter.configs").setup {
+  -- A list of parser names, or "all"
+  ensure_installed = { "c", "vim", "rust", "lua" },
   highlight = {
-      -- ...
+      enable = true,
+	-- Setting this to true will run `:h syntax` and tree-sitter at the same time.
+	-- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
+	-- Using this option may slow down your editor, and you may see some duplicate highlights.
+	-- Instead of true it can also be a list of languages
+	additional_vim_regex_highlighting = false,
   },
   -- ...
   rainbow = {
@@ -273,7 +280,7 @@ EOF
 nnoremap <silent> <Leader>r :source $MYVIMRC<cr>
 
 " TODO: automate this; lunix: h14, wenblows: h20
-set guifont=FantasqueSansMono\ Nerd\ Font:h14
+set guifont=FantasqueSansMono\ Nerd\ Font:h18
 
 " increase/decrease font size
 nnoremap <silent> <c-_> :ZoomIn<cr>
@@ -291,8 +298,8 @@ function Neovide_fullscreen()
 endfunction
 map <F11> :call Neovide_fullscreen()<cr>
 
-let g:neovide_refresh_rate=60
-" let g:neovide_refresh_rate=120
+" let g:neovide_refresh_rate=60
+let g:neovide_refresh_rate=120
 let g:neovide_transparency=0.95
 let g:neovide_cursor_vfx_mode = "pixiedust"
 let g:neovide_cursor_vfx_particle_density=32.0
