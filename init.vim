@@ -279,8 +279,8 @@ EOF
 " reload configuration
 nnoremap <silent> <Leader>r :source $MYVIMRC<cr>
 
-" TODO: automate this; lunix: h14, wenblows: h20
-set guifont=FantasqueSansMono\ Nerd\ Font:h18
+" TODO: automate this; lunix: h14, wenblows: h16
+set guifont=FantasqueSansMono\ Nerd\ Font:h16
 
 " increase/decrease font size
 nnoremap <silent> <c-_> :ZoomIn<cr>
