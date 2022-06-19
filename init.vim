@@ -80,6 +80,7 @@ Plug 'p00f/nvim-ts-rainbow'
 " Plug 'tpope/vim-surround'
 Plug 'machakann/vim-sandwich'
 Plug 'tpope/vim-repeat'
+Plug 'figurae/vim-z80-democoding'
 call plug#end()
 
 " colorscheme dracula		    " DRAKULAAA @vv@
@@ -279,8 +280,8 @@ EOF
 " reload configuration
 nnoremap <silent> <Leader>r :source $MYVIMRC<cr>
 
-" TODO: automate this; lunix: h14, wenblows: h16
-set guifont=FantasqueSansMono\ Nerd\ Font:h16
+" TODO: automate this; lunix: h13, wenblows: h16
+set guifont=FantasqueSansMono\ Nerd\ Font:h13
 
 " increase/decrease font size
 nnoremap <silent> <c-_> :ZoomIn<cr>
@@ -298,8 +299,8 @@ function Neovide_fullscreen()
 endfunction
 map <F11> :call Neovide_fullscreen()<cr>
 
-" let g:neovide_refresh_rate=60
-let g:neovide_refresh_rate=120
+let g:neovide_refresh_rate=60
+" let g:neovide_refresh_rate=120
 let g:neovide_transparency=0.95
 let g:neovide_cursor_vfx_mode = "pixiedust"
 let g:neovide_cursor_vfx_particle_density=32.0
@@ -369,9 +370,29 @@ vim.api.nvim_create_user_command('CargoRun', function()
 	auto_close = false,
     })
 end, { bang = true })
+
+vim.api.nvim_create_user_command('ZXRun', function()
+    require('FTerm').scratch({
+	cmd = {
+	    'sjasmplus',
+	    vim.fn.expand('%:p'),
+	    '&&',
+        'fuse',
+	    vim.fn.expand('%:h')..'/load.sna'
+	},
+	border = 'rounded',
+	dimensions = {
+	    height = 0.9,
+	    width = 1,
+	},
+	blend = 15,
+	auto_close = false,
+    })
+end, { bang = true })
 EOF
 
 nnoremap <silent> <Leader>t :CargoRun<CR>
+nnoremap <silent> <Leader>a :ZXRun<CR>
 nnoremap <silent> <Leader>f :RustFmt<CR>
 nnoremap <silent> <Leader>s :Startify<CR>
 nnoremap <silent> <Leader>O O<ESC>O
