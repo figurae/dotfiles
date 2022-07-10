@@ -347,6 +347,7 @@ nnoremap <silent> <Space>bw :BufferOrderByWindowNumber<CR>
 lua << EOF
 require'FTerm'.setup({
     -- cmd = nil,
+    cmd = 'C:\\Program Files\\PowerShell\\7\\pwsh.exe',
     border = 'rounded',
     dimensions  = {
 	height = 0.9,
@@ -365,7 +366,7 @@ vim.api.nvim_create_user_command('CargoRun', function()
 	border = 'rounded',
 	dimensions = {
 	    height = 0.9,
-	    width = 1,
+	    width = 0.96,
 	},
 	blend = 15,
 	auto_close = false,
@@ -384,7 +385,7 @@ vim.api.nvim_create_user_command('ZXRun', function()
 	border = 'rounded',
 	dimensions = {
 	    height = 0.9,
-	    width = 1,
+	    width = 0.96,
 	},
 	blend = 15,
 	auto_close = false,
