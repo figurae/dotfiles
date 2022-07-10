@@ -281,7 +281,7 @@ EOF
 nnoremap <silent> <Leader>r :source $MYVIMRC<cr>
 
 " TODO: automate this; lunix: h13, wenblows: h16
-set guifont=FantasqueSansMono\ Nerd\ Font:h13
+set guifont=FantasqueSansMono\ Nerd\ Font:h16
 
 " increase/decrease font size
 nnoremap <silent> <c-_> :ZoomIn<cr>
@@ -299,8 +299,8 @@ function Neovide_fullscreen()
 endfunction
 map <F11> :call Neovide_fullscreen()<cr>
 
-let g:neovide_refresh_rate=60
-" let g:neovide_refresh_rate=120
+" let g:neovide_refresh_rate=60
+let g:neovide_refresh_rate=120
 let g:neovide_transparency=0.95
 let g:neovide_cursor_vfx_mode = "pixiedust"
 let g:neovide_cursor_vfx_particle_density=32.0
@@ -346,6 +346,7 @@ nnoremap <silent> <Space>bw :BufferOrderByWindowNumber<CR>
 
 lua << EOF
 require'FTerm'.setup({
+    -- cmd = nil,
     border = 'rounded',
     dimensions  = {
 	height = 0.9,
