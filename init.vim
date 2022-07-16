@@ -379,26 +379,23 @@ vim.api.nvim_create_user_command('CargoRun', function()
 	border = 'rounded',
 	dimensions = {
 	    height = 0.9,
-	    width = 0.96,
+	    width = 1,
 	},
 	blend = 15,
 	auto_close = false,
     })
 end, { bang = true })
 
-vim.api.nvim_create_user_command('ZXRun', function()
+vim.api.nvim_create_user_command('RunScript', function()
     require('FTerm').scratch({
 	cmd = {
-	    'sjasmplus',
-	    vim.fn.expand('%:p'),
-	    '&&',
-        'fuse',
-	    vim.fn.expand('%:h')..'/load.sna'
+	    './run.sh',
+	    vim.fn.expand('%:p')
 	},
 	border = 'rounded',
 	dimensions = {
 	    height = 0.9,
-	    width = 0.96,
+	    width = 1,
 	},
 	blend = 15,
 	auto_close = false,
@@ -407,7 +404,7 @@ end, { bang = true })
 EOF
 
 nnoremap <silent> <Leader>t :CargoRun<CR>
-nnoremap <silent> <Leader>a :ZXRun<CR>
+nnoremap <silent> <Leader>a :RunScript<CR>
 nnoremap <silent> <Leader>f :RustFmt<CR>
 nnoremap <silent> <Leader>s :Startify<CR>
 nnoremap <silent> <Leader>O O<ESC>O
