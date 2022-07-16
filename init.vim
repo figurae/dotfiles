@@ -281,8 +281,11 @@ EOF
 " reload configuration
 nnoremap <silent> <Leader>r :source $MYVIMRC<cr>
 
-" TODO: automate this; lunix: h13, wenblows: h16
-set guifont=FantasqueSansMono\ Nerd\ Font:h16
+if has("linux")
+    set guifont=FantasqueSansMono\ Nerd\ Font:h13
+else
+    set guifont=FantasqueSansMono\ Nerd\ Font:h16
+endif
 
 " increase/decrease font size
 nnoremap <silent> <c-_> :ZoomIn<cr>
@@ -300,8 +303,12 @@ function Neovide_fullscreen()
 endfunction
 map <F11> :call Neovide_fullscreen()<cr>
 
-" let g:neovide_refresh_rate=60
-let g:neovide_refresh_rate=120
+if has("linux")
+    let g:neovide_refresh_rate=60
+else
+    let g:neovide_refresh_rate=120
+endif
+
 let g:neovide_transparency=0.95
 let g:neovide_cursor_vfx_mode = "pixiedust"
 let g:neovide_cursor_vfx_particle_density=32.0
@@ -346,9 +353,14 @@ nnoremap <silent> <Space>bw :BufferOrderByWindowNumber<CR>
 " :BarbarDisable - very bad command, should never be used
 
 lua << EOF
+if vim.fn.has('linux') == 1 then
+    actualcmd = 'C:\\Program Files\\PowerShell\\7\\pwsh.exe'
+else
+    actualcmd = '/bin/zsh'
+end
 require'FTerm'.setup({
     -- cmd = nil,
-    cmd = 'C:\\Program Files\\PowerShell\\7\\pwsh.exe',
+    cmd = actualcmd,
     border = 'rounded',
     dimensions  = {
 	height = 0.9,
