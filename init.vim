@@ -81,6 +81,7 @@ Plug 'p00f/nvim-ts-rainbow'
 Plug 'machakann/vim-sandwich'
 Plug 'tpope/vim-repeat'
 Plug 'figurae/vim-z80-democoding'
+Plug 'mg979/vim-visual-multi', {'branch': 'master'}
 call plug#end()
 
 " colorscheme dracula		    " DRAKULAAA @vv@
