@@ -389,7 +389,7 @@ end, { bang = true })
 vim.api.nvim_create_user_command('RunScript', function()
     require('FTerm').scratch({
 	cmd = {
-	    './run.sh',
+	    '../run.sh',
 	    vim.fn.expand('%:p')
 	},
 	border = 'rounded',
