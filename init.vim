@@ -64,7 +64,7 @@ Plug 'BurntSushi/ripgrep'
 " TODO: make this work with code actions
 Plug 'nvim-telescope/telescope-ui-select.nvim'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
-Plug 'Pocco81/AutoSave.nvim'
+Plug 'Pocco81/auto-save.nvim'
 Plug 'psliwka/vim-smoothie'
 Plug 'kyazdani42/nvim-web-devicons'
 Plug 'romgrk/barbar.nvim'
@@ -141,7 +141,8 @@ local nvim_lsp = require'lspconfig'
 local opts = {
     tools = { -- rust-tools options
 	autoSetHints = true,
-	hover_with_actions = true,
+	-- FIXME: this is deprecated
+	-- hover_with_actions = true,
 	inlay_hints = {
 	    show_parameter_hints = false,
 	    parameter_hints_prefix = "",
@@ -192,7 +193,7 @@ cmp.setup({
         ['<C-f>'] = cmp.mapping.scroll_docs(4),
 	['<C-Space>'] = cmp.mapping.complete(),
         ['<C-e>'] = cmp.mapping.close(),
-        ['<Tab>'] = cmp.mapping.confirm({
+        ['<C-Enter>'] = cmp.mapping.confirm({
 	    behavior = cmp.ConfirmBehavior.Insert,
 	    select = true,
 	})
@@ -238,22 +239,40 @@ set signcolumn=yes
 " autocmd BufWritePre *.rs lua vim.lsp.buf.formatting_sync(nil, 200)
 
 lua << EOF
-local autosave = require("autosave")
-
+local autosave = require("auto-save")
 autosave.setup({
-    enabled = true,
-    execution_message = "AutoSave: saved at " .. vim.fn.strftime("%H:%M:%S"),
-    events = {"InsertLeave", "TextChanged"},
-    conditions = {
-	exists = true,
-        filename_is_not = {},
-	filetype_is_not = {},
-	modifiable = true
-    },
-    write_all_buffers = false,
-    on_off_commands = true,
-    clean_command_line_interval = 0,
-    debounce_delay = 135
+    enabled = true, -- start auto-save when the plugin is loaded (i.e. when your package manager loads it)
+    execution_message = {
+		message = function() -- message to print on save
+			return ("AutoSave: saved at " .. vim.fn.strftime("%H:%M:%S"))
+		end,
+		dim = 0.18, -- dim the color of `message`
+		cleaning_interval = 1250, -- (milliseconds) automatically clean MsgArea after displaying `message`. See :h MsgArea
+	},
+    trigger_events = {"InsertLeave", "TextChanged"}, -- vim events that trigger auto-save. See :h events
+	-- function that determines whether to save the current buffer or not
+	-- return true: if buffer is ok to be saved
+	-- return false: if it's not ok to be saved
+	condition = function(buf)
+		local fn = vim.fn
+		local utils = require("auto-save.utils.data")
+
+		if
+			fn.getbufvar(buf, "&modifiable") == 1 or
+			utils.not_in(fn.getbufvar(buf, "&filetype"), {}) then
+			return true -- met condition(s), can save
+		end
+		return false -- can't save
+	end,
+    write_all_buffers = false, -- write all buffers when the current one meets `condition`
+    debounce_delay = 135, -- saves the file at most every `debounce_delay` milliseconds
+	callbacks = { -- functions to be executed at different intervals
+		enabling = nil, -- ran when enabling auto-save
+		disabling = nil, -- ran when disabling auto-save
+		before_asserting_save = nil, -- ran before checking `condition`
+		before_saving = nil, -- ran before doing the actual save
+		after_saving = nil -- ran after doing the actual save
+	}
 })
 EOF
 
@@ -282,7 +301,8 @@ EOF
 nnoremap <silent> <Leader>r :source $MYVIMRC<cr>
 
 if has("linux")
-    set guifont=FantasqueSansMono\ Nerd\ Font:h13
+" 13 for x11, 16 for wayland?
+    set guifont=FantasqueSansMono\ Nerd\ Font:h16
 else
     set guifont=FantasqueSansMono\ Nerd\ Font:h16
 endif
