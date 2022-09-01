@@ -137,25 +137,18 @@ set shortmess+=c
 " See https://github.com/simrat39/rust-tools.nvim#configuration
 lua << EOF
 local nvim_lsp = require'lspconfig'
+local rt = require'rust-tools'
 
 local opts = {
-    tools = { -- rust-tools options
-	autoSetHints = true,
-	-- FIXME: this is deprecated
-	-- hover_with_actions = true,
-	inlay_hints = {
-	    show_parameter_hints = false,
-	    parameter_hints_prefix = "",
-	    other_hints_prefix = "",
-	},
-    },
-
     -- all the opts to send to nvim-lspconfig
     -- these override the defaults set by rust-tools.nvim
     -- https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#rust_analyzer
     server = {
 	-- on_attach is a callback called when the language server attachs to the buffer
-	-- on_attach = on_attach,
+	on_attach = function(_, bufnr)
+	    vim.keymap.set("n", "<C-h>", rt.hover_actions.hover_actions, { buffer = bufnr })
+	    vim.keymap.set("n", "<C-l>", rt.code_action_group.code_action_group, { buffer = bufnr })
+	end,
 	settings = {
 	    -- to enable rust-analyzer settings visit:
 	    -- https://github.com/rust-analyzer/rust-analyzer/blob/master/docs/user/generated_config.adoc
@@ -169,7 +162,7 @@ local opts = {
     },
 }
 
-require('rust-tools').setup(opts)
+rt.setup(opts)
 EOF
 
 " Setup Completion
@@ -211,7 +204,7 @@ EOF
 
 " Code navigation shortcuts
 nnoremap <silent> <c-]> <cmd>lua vim.lsp.buf.definition()<CR>
-nnoremap <silent> K     <cmd>lua vim.lsp.buf.hover()<CR>
+nnoremap <silent> <c-h> <cmd>lua vim.lsp.buf.hover()<CR>
 nnoremap <silent> gD    <cmd>lua vim.lsp.buf.implementation()<CR>
 nnoremap <silent> <c-k> <cmd>lua vim.lsp.buf.signature_help()<CR>
 nnoremap <silent> 1gD   <cmd>lua vim.lsp.buf.type_definition()<CR>
