@@ -75,7 +75,9 @@ Plug 'kosayoda/nvim-lightbulb/'
 Plug 'drzel/vim-gui-zoom'
 Plug 'mhinz/vim-startify'
 Plug 'tpope/vim-endwise'
-Plug 'rstacruz/vim-closer'
+" TODO: Went haywire for some reason
+" Plug 'rstacruz/vim-closer'
+Plug 'windwp/nvim-autopairs'
 Plug 'p00f/nvim-ts-rainbow'
 " Plug 'tpope/vim-surround'
 Plug 'machakann/vim-sandwich'
@@ -165,10 +167,18 @@ local opts = {
 rt.setup(opts)
 EOF
 
+lua << EOF
+    require("nvim-autopairs").setup {
+	fast_wrap = {}
+    }
+EOF
+
 " Setup Completion
 " See https://github.com/hrsh7th/nvim-cmp#basic-configuration
 lua << EOF
+local cmp_autopairs = require'nvim-autopairs.completion.cmp'
 local cmp = require'cmp'
+
 cmp.setup({
     -- Enable LSP snippets
     snippet = {
@@ -200,6 +210,11 @@ cmp.setup({
 	{ name = 'buffer' },
     },
 })
+
+cmp.event:on(
+    'confirm_done',
+    cmp_autopairs.on_confirm_done()
+)
 EOF
 
 " Code navigation shortcuts
@@ -399,6 +414,24 @@ vim.api.nvim_create_user_command('CargoRun', function()
     })
 end, { bang = true })
 
+vim.api.nvim_create_user_command('CargoBench', function()
+    require('FTerm').scratch({
+	cmd = {
+	    'cargo',
+	    'bench',
+	    '--manifest-path',
+	    vim.fn.expand('%:h')..'/../Cargo.toml'
+	},
+	border = 'rounded',
+	dimensions = {
+	    height = 0.9,
+	    width = 1,
+	},
+	blend = 15,
+	auto_close = false,
+    })
+end, { bang = true })
+
 vim.api.nvim_create_user_command('RunScript', function()
     require('FTerm').scratch({
 	cmd = {
@@ -417,6 +450,7 @@ end, { bang = true })
 EOF
 
 nnoremap <silent> <Leader>t :CargoRun<CR>
+nnoremap <silent> <Leader>y :CargoBench<CR>
 nnoremap <silent> <Leader>a :RunScript<CR>
 nnoremap <silent> <Leader>f :RustFmt<CR>
 nnoremap <silent> <Leader>s :Startify<CR>
@@ -429,3 +463,31 @@ imap <expr> <Tab>   vsnip#jumpable(1)   ? '<Plug>(vsnip-jump-next)'      : '<Tab
 smap <expr> <Tab>   vsnip#jumpable(1)   ? '<Plug>(vsnip-jump-next)'      : '<Tab>'
 imap <expr> <S-Tab> vsnip#jumpable(-1)  ? '<Plug>(vsnip-jump-prev)'      : '<S-Tab>'
 smap <expr> <S-Tab> vsnip#jumpable(-1)  ? '<Plug>(vsnip-jump-prev)'      : '<S-Tab>'
+
+let g:startify_lists = [
+    \ { 'type': 'sessions',  'header': ['   Sessions']       },
+    \ { 'type': 'files',     'header': ['   MRU']            },
+    \ { 'type': 'dir',       'header': ['   MRU '. getcwd()] },
+    \ { 'type': 'bookmarks', 'header': ['   Bookmarks']      },
+    \ { 'type': 'commands',  'header': ['   Commands']       },
+    \ ]
+
+" TODO: linuxify this
+let g:startify_bookmarks = [ { 'c': 'C:\Users\aleks\Documents\Repos\dotfiles\init.vim' } ]
+
+let g:startify_fortune_use_unicode = 1
+
+let g:startify_custom_header = startify#pad([ '┻━┻︵ \(°□°)/ ︵ ┻━┻' ])
+
+nnoremap <A-h> <C-w>h
+nnoremap <A-j> <C-w>j
+nnoremap <A-k> <C-w>k
+nnoremap <A-l> <C-w>l
+
+noremap <silent> <C-Left>   :vertical resize -3<CR>
+noremap <silent> <C-Right>  :vertical resize +3<CR>
+noremap <silent> <C-Up>	    :resize +3<CR>
+noremap <silent> <C-Down>   :resize -3<CR>
+
+map <Leader>tv <C-w>t<C-w>H
+map <Leader>th <C-w>t<C-w>K
