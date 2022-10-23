@@ -70,6 +70,7 @@ Plug 'kyazdani42/nvim-web-devicons'
 Plug 'romgrk/barbar.nvim'
 " Plug 'akinsho/toggleterm.nvim'
 Plug 'numToStr/FTerm.nvim'
+Plug 'numToStr/Comment.nvim'
 Plug 'beauwilliams/statusline.lua'
 Plug 'kosayoda/nvim-lightbulb/'
 Plug 'drzel/vim-gui-zoom'
@@ -211,6 +212,7 @@ cmp.setup({
     },
 })
 
+-- FIXME: this does too much, like automatic brackets in #[derive(...)]
 cmp.event:on(
     'confirm_done',
     cmp_autopairs.on_confirm_done()
@@ -379,6 +381,8 @@ nnoremap <silent> <Space>bw :BufferOrderByWindowNumber<CR>
 " Other:
 " :BarbarEnable - enables barbar (enabled by default)
 " :BarbarDisable - very bad command, should never be used
+
+lua require('Comment').setup()
 
 lua << EOF
 if vim.fn.has('linux') == 1 then
